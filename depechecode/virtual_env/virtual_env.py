@@ -59,7 +59,9 @@ def execute_in_subprocess(cmd: List[str], cwd=None, env=None):
 
         exit_code = proc.wait()
     if exit_code != 0:
-        raise subprocess.CalledProcessError(exit_code, cmd, output="\n".join(logs))
+        raise ValueError(
+            "\n".join(logs)
+        )  # subprocess.CalledProcessError(exit_code, cmd, output="\n".join(logs))
 
 
 def _generate_virtualenv_cmd(tmp_dir, python_bin, system_site_packages):
