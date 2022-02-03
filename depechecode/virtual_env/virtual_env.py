@@ -30,7 +30,7 @@ from depechecode.logger import get_module_logger
 _LOGGER = get_module_logger()
 
 
-def execute_in_subprocess(cmd: List[str]):
+def execute_in_subprocess(cmd: List[str], cwd=None, env=None):
     """
     Execute a process and stream output to logger
 
@@ -40,7 +40,13 @@ def execute_in_subprocess(cmd: List[str]):
 
     _LOGGER.info(f"Executing cmd: {' '.join(shlex.quote(c) for c in cmd)}")
     with subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0, close_fds=True
+        cmd,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        bufsize=0,
+        close_fds=True,
+        env=env,
     ) as proc:
         _LOGGER.info("Output:")
         if proc.stdout:

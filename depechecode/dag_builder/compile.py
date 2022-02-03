@@ -13,8 +13,8 @@
 #############################################################################
 #                                 Packages                                  #
 #############################################################################
-
-from abc import ABCMeta
+import os
+from pathlib import Path
 from typing import List
 from airflow.utils.decorators import apply_defaults
 from depechecode.virtual_env import TempVenv, execute_in_subprocess
@@ -59,6 +59,7 @@ class _Compile:
         python_bin: str = None,
         profiles_dir: str = None,
         target: str = None,
+        working_dir: str = None,
         *args,
         **kwargs
     ):
@@ -72,6 +73,13 @@ class _Compile:
         """
         self._profiles_dir = profiles_dir
         self._target = target
+        self._working_dir = working_dir
+
+        if working_dir and requirements_file_path:
+            requirements_file_path = str(
+                Path(working_dir) / Path(requirements_file_path)
+            )
+
         self._manager = TempVenv(
             requirements_file_path=requirements_file_path, python_bin=python_bin
         )
@@ -82,12 +90,18 @@ class _Compile:
         """
 
         self._manager.__enter__()
+        env = os.environ.copy()
+
+        # Add the newyly created virtual python to the path
+        virtual_env_path = self._manager.bin_path
+        env["PATH"] = virtual_env_path + os.pathsep + env["PATH"]
+
         clean_command = self.format_dbt_command_args("dbt", "clean")
         deps_command = self.format_dbt_command_args("dbt", "deps")
         compile_command = self.format_dbt_command_args("dbt", "compile")
 
         for c in [clean_command, deps_command, compile_command]:
-            execute_in_subprocess(c)
+            execute_in_subprocess(c, env=env, cwd=self._working_dir)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 
