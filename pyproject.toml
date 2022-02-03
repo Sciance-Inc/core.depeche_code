@@ -8,7 +8,7 @@ authors = ["hugo juhel <juhel.hugo@stratemia.com>"]
 "DepecheCode" = "depechecode.airflow_plugin:DepecheCodePlugin"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 sshtunnel = "^0.4.0"
 SQLAlchemy = "^1.4.31"
 pyodbc = "^4.0.32"

@@ -6,7 +6,8 @@ packages = \
  'depechecode.airflow_plugin',
  'depechecode.airflow_plugin.operators.bash',
  'depechecode.airflow_plugin.operators.dbt',
- 'depechecode.dag_builder']
+ 'depechecode.dag_builder',
+ 'depechecode.wip']
 
 package_data = \
 {'': ['*']}
@@ -36,7 +37,7 @@ setup_kwargs = {
     'package_data': package_data,
     'install_requires': install_requires,
     'entry_points': entry_points,
-    'python_requires': '>=3.8,<4.0',
+    'python_requires': '>=3.7,<4.0',
 }
 
 
