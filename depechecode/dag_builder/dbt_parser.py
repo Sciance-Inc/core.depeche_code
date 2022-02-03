@@ -75,8 +75,7 @@ class DBTAutoDag(MixinLogable):
         self._kwargs = kwargs
 
         # Prepare groups to gather tasks.
-        self._run_group = TaskGroup(run_group_name)
-        self._test_group = TaskGroup(test_group_name)
+        self._run_group: TaskGroup = None  # type: ignore
 
     def load_dbt_manifest(self):
         """
@@ -103,47 +102,50 @@ class DBTAutoDag(MixinLogable):
 
         manifest = self.load_dbt_manifest()
         tasks = {}
+        with TaskGroup(group_id="run_group") as tg1:
 
-        # Create the tasks for each model
-        for node_name in manifest["nodes"].keys():
-            if node_name.split(".")[0] == "model":
+            # Create the tasks for each model
+            for node_name in manifest["nodes"].keys():
+                if node_name.split(".")[0] == "model":
 
-                # Make the run nodes
-                tasks[node_name] = RunOperator(
-                    task_group=self._run_group,
-                    task_id=node_name,
-                    model=node_name.split(".")[-1],
-                    cwd=self._working_dir,
-                    requirements_file=self._requirements_file_path,
-                    profiles_dir=self._profiles_dir,
-                    target=self._target,
-                    dag=self._dag,
-                )
+                    # Make the run nodes
+                    tasks[node_name] = RunOperator(
+                        task_group=self._run_group,
+                        task_id=node_name,
+                        model=node_name.split(".")[-1],
+                        cwd=self._working_dir,
+                        requirements_file=self._requirements_file_path,
+                        profiles_dir=self._profiles_dir,
+                        target=self._target,
+                        dag=self._dag,
+                    )
 
-                # # Make the test nodes
-                # node_test = node_name.replace("model", "test")
-                # tasks[node_test] = TestOperator(
-                #     task_group=self._test_group,
-                #     task_id=node_test,
-                #     model=node_test.split(".")[-1],
-                #     cwd=self._working_dir,
-                #     requirements_file=self._requirements_file_path,
-                #     profiles_dir=self._profiles_dir,
-                #     target=self._target,
-                #     dag=self._dag,
-                # )
+                    # # Make the test nodes
+                    # node_test = node_name.replace("model", "test")
+                    # tasks[node_test] = TestOperator(
+                    #     task_group=self._test_group,
+                    #     task_id=node_test,
+                    #     model=node_test.split(".")[-1],
+                    #     cwd=self._working_dir,
+                    #     requirements_file=self._requirements_file_path,
+                    #     profiles_dir=self._profiles_dir,
+                    #     target=self._target,
+                    #     dag=self._dag,
+                    # )
 
-        # Add upstream and downstream dependencies for each run task
-        for node_name in manifest["nodes"].keys():
-            if node_name.split(".")[0] == "model":
-                for upstream_node in manifest["nodes"][node_name]["depends_on"][
-                    "nodes"
-                ]:
-                    upstream_node_type = upstream_node.split(".")[0]
-                    if upstream_node_type == "model":
-                        tasks[upstream_node] >> tasks[node_name]
+            # Add upstream and downstream dependencies for each run task
+            for node_name in manifest["nodes"].keys():
+                if node_name.split(".")[0] == "model":
+                    for upstream_node in manifest["nodes"][node_name]["depends_on"][
+                        "nodes"
+                    ]:
+                        upstream_node_type = upstream_node.split(".")[0]
+                        if upstream_node_type == "model":
+                            tasks[upstream_node] >> tasks[node_name]
 
-                self.info(f"Created node {node_name}")
+                    self.info(f"Created node {node_name}")
+
+            self._run_group = tg1
 
     @property
     def run_group(self):
