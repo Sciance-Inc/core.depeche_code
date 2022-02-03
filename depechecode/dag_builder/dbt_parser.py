@@ -120,18 +120,18 @@ class DBTAutoDag(MixinLogable):
                     dag=self._dag,
                 )
 
-                # Make the test nodes
-                node_test = node_name.replace("model", "test")
-                tasks[node_test] = TestOperator(
-                    task_group=self._test_group,
-                    task_id=node_test,
-                    model=node_test.split(".")[-1],
-                    cwd=self._working_dir,
-                    requirements_file=self._requirements_file_path,
-                    profiles_dir=self._profiles_dir,
-                    target=self._target,
-                    dag=self._dag,
-                )
+                # # Make the test nodes
+                # node_test = node_name.replace("model", "test")
+                # tasks[node_test] = TestOperator(
+                #     task_group=self._test_group,
+                #     task_id=node_test,
+                #     model=node_test.split(".")[-1],
+                #     cwd=self._working_dir,
+                #     requirements_file=self._requirements_file_path,
+                #     profiles_dir=self._profiles_dir,
+                #     target=self._target,
+                #     dag=self._dag,
+                # )
 
         # Add upstream and downstream dependencies for each run task
         for node_name in manifest["nodes"].keys():
@@ -149,6 +149,6 @@ class DBTAutoDag(MixinLogable):
     def run_group(self):
         return self._run_group
 
-    @property
-    def test_group(self):
-        return self._test_group
+    # @property
+    # def test_group(self):
+    #     return self._test_group

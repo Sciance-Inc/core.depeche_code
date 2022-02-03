@@ -146,6 +146,10 @@ class CleanOperator(_DBTModelLessOperator):
     _VERB = "clean"
 
 
+class TestOperator(_DBTModelLessOperator):
+    _VERB = "test"
+
+
 class CompileOperator(_DBTModelLessOperator):
     _VERB = "compile"
 
@@ -160,7 +164,3 @@ class SeedOperator(_DBTModelLessOperator):
 
 class RunOperator(_DBTModelOperator):
     _VERB = "run"
-
-
-class TestOperator(_DBTModelOperator):
-    _VERB = "test"
