@@ -122,7 +122,7 @@ class DBTAutoDag(MixinLogable):
 
                 # Make the test nodes
                 node_test = node_name.replace("model", "test")
-                tasks[node_name] = TestOperator(
+                tasks[node_test] = TestOperator(
                     task_group=self._test_group,
                     task_id=node_test,
                     model=node_test.split(".")[-1],
