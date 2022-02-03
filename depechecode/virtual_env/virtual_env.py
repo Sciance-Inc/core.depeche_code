@@ -49,14 +49,17 @@ def execute_in_subprocess(cmd: List[str], cwd=None, env=None):
         env=env,
     ) as proc:
         _LOGGER.info("Output:")
+        logs = []
         if proc.stdout:
             with proc.stdout:
                 for line in iter(proc.stdout.readline, b""):
-                    _LOGGER.info(f"{line.decode().rstrip()}")
+                    L = line.decode().rstrip()
+                    _LOGGER.info(f"{L}")
+                    logs.append(L)
 
         exit_code = proc.wait()
     if exit_code != 0:
-        raise subprocess.CalledProcessError(exit_code, cmd)
+        raise subprocess.CalledProcessError(exit_code, cmd, output="\n".join(logs))
 
 
 def _generate_virtualenv_cmd(tmp_dir, python_bin, system_site_packages):
