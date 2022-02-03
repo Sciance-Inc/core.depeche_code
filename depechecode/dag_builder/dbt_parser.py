@@ -20,10 +20,8 @@ from pathlib import Path
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.decorators import apply_defaults
 
-from depechecode.airflow_plugin.operators.dbt import (
-    RunOperator,
-    TestOperator,
-)
+from depechecode.airflow_plugin.operators.dbt import RunOperator
+from depechecode.dag_builder.compile import _Compile
 from depechecode.logger import MixinLogable
 
 #############################################################################
@@ -57,8 +55,6 @@ class DBTAutoDag(MixinLogable):
         profiles_dir: str = None,
         target: str = None,
         requirements_file_path: str = None,
-        run_group_name="dbt_run",
-        test_group_name="dbt_test",
         *args,
         **kwargs,
     ):
@@ -70,6 +66,12 @@ class DBTAutoDag(MixinLogable):
         self._profiles_dir = profiles_dir
         self._target = target
         self._requirements_file_path = requirements_file_path
+
+        self._compile = _Compile(
+            requirements_file_path=requirements_file_path,
+            working_dir=working_dir,
+            profiles_dir=profiles_dir,
+        )
 
         self._args = args
         self._kwargs = kwargs
@@ -83,14 +85,15 @@ class DBTAutoDag(MixinLogable):
         Returns: A JSON object containing the dbt manifest content.
         """
 
-        try:
-            path = Path(self._working_dir) / Path(self._PATH_TO_TARGET)
-            with open(path) as f:
-                file_content = json.load(f)
-        except BaseException as error:
-            raise IOError(
-                f"Failed to read the DBT s project manifest : {path}"  # type: ignore
-            ) from error
+        with self._compile:
+            try:
+                path = Path(self._working_dir) / Path(self._PATH_TO_TARGET)
+                with open(path) as f:
+                    file_content = json.load(f)
+            except BaseException as error:
+                raise IOError(
+                    f"Failed to read the DBT s project manifest : {path}"  # type: ignore
+                ) from error
 
         return file_content
 
@@ -120,19 +123,6 @@ class DBTAutoDag(MixinLogable):
                         dag=self._dag,
                     )
 
-                    # # Make the test nodes
-                    # node_test = node_name.replace("model", "test")
-                    # tasks[node_test] = TestOperator(
-                    #     task_group=self._test_group,
-                    #     task_id=node_test,
-                    #     model=node_test.split(".")[-1],
-                    #     cwd=self._working_dir,
-                    #     requirements_file=self._requirements_file_path,
-                    #     profiles_dir=self._profiles_dir,
-                    #     target=self._target,
-                    #     dag=self._dag,
-                    # )
-
             # Add upstream and downstream dependencies for each run task
             for node_name in manifest["nodes"].keys():
                 if node_name.split(".")[0] == "model":
@@ -150,7 +140,3 @@ class DBTAutoDag(MixinLogable):
     @property
     def run_group(self):
         return self._run_group
-
-    # @property
-    # def test_group(self):
-    #     return self._test_group

@@ -23,7 +23,7 @@ from pathlib import Path
 from airflow.operators.bash import BashOperator
 from airflow.utils.decorators import apply_defaults
 from airflow.utils.operator_helpers import context_to_airflow_vars
-from depechecode.airflow_plugin.operators.bash.virtual_env import TempVenv
+from depechecode.virtual_env import TempVenv
 
 #############################################################################
 #                                  Script                                   #
