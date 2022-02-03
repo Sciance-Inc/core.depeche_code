@@ -145,10 +145,10 @@ class DBTAutoDag(MixinLogable):
 
                 self.info(f"Created node {node_name}")
 
-        @property
-        def run_group(self):
-            return self._run_group
+    @property
+    def run_group(self):
+        return self._run_group
 
-        @property
-        def test_group(self):
-            return self._test_group
+    @property
+    def test_group(self):
+        return self._test_group
