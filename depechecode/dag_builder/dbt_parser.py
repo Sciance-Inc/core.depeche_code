@@ -45,7 +45,7 @@ class DBTAutoDag(MixinLogable):
         dbt_test_group_name: Optional override for the task group name.
     """
 
-    _PATH_TO_TARGET = "target/manifest.json"
+    _PATH_TO_TARGET = "depechecode/manifest.json"
 
     @apply_defaults
     def __init__(
@@ -67,12 +67,6 @@ class DBTAutoDag(MixinLogable):
         self._target = target
         self._requirements_file_path = requirements_file_path
 
-        #self._compile = _Compile(
-        #    requirements_file_path=requirements_file_path,
-        #    working_dir=working_dir,
-        #    profiles_dir=profiles_dir,
-        #)
-
         self._args = args
         self._kwargs = kwargs
 
@@ -85,7 +79,7 @@ class DBTAutoDag(MixinLogable):
         Returns: A JSON object containing the dbt manifest content.
         """
 
-        #with self._compile:
+        # with self._compile:
         try:
             path = Path(self._working_dir) / Path(self._PATH_TO_TARGET)
             with open(path) as f:
