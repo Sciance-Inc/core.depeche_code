@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "depechecode"
+version = "0.0.1"
+description = ""
+authors = ["hugo juhel <juhel.hugo@stratemia.com>"]
+
+[tool.poetry.plugins."airflow.plugins"]
+"DepecheCode" = "depechecode.airflow_plugin:DepecheCodePlugin"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sshtunnel = "^0.4.0"
+SQLAlchemy = "^1.4.31"
+pyodbc = "^4.0.32"
+virtualenv = "^20.13.0"
+apache-airflow = "^2.2.3"
+
+[tool.poetry.dev-dependencies]
+black = "^21.12b0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
