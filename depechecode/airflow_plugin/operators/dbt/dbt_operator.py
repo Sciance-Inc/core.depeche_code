@@ -168,24 +168,30 @@ class DebugOperator(_DBTModelLessOperator):
 
 
 class CleanOperator(_DBTModelLessOperator):
+    ui_color = "#E1F1EF"
     _VERB = "clean"
 
 
 class TestOperator(_DBTModelLessOperator):
+    ui_color = "#6B90AA"
     _VERB = "test"
 
 
 class CompileOperator(_DBTModelLessOperator):
+    ui_color = "#D6807D"
     _VERB = "compile"
 
 
 class DepsOperator(_DBTModelLessOperator):
+    ui_color = "#16254B"
     _VERB = "deps"
 
 
 class SeedOperator(_DBTModelLessOperator):
+    ui_color = "#F7BA5D"
     _VERB = "seed"
 
 
 class RunOperator(_DBTModelOperator):
+    ui_color = "#163433"
     _VERB = "run"
