@@ -135,6 +135,7 @@ class _DBTModelLessOperator(_DBTOperator):
 
 class _DBTModelOperator(_DBTOperator):
     _VERB: str
+    # ui_fgcolor = "#000000"
 
     @apply_defaults
     def __init__(
@@ -169,30 +170,28 @@ class DebugOperator(_DBTModelLessOperator):
 
 
 class CleanOperator(_DBTModelLessOperator):
-    ui_color = "#E1F1EF"
     _VERB = "clean"
 
 
 class TestOperator(_DBTModelLessOperator):
-    ui_color = "#6B90AA"
+    ui_color = "#DF7861"
     _VERB = "test"
 
 
 class CompileOperator(_DBTModelLessOperator):
-    ui_color = "#D6807D"
     _VERB = "compile"
 
 
 class DepsOperator(_DBTModelLessOperator):
-    ui_color = "#16254B"
+    ui_color = "#ECB390"
     _VERB = "deps"
 
 
 class SeedOperator(_DBTModelLessOperator):
-    ui_color = "#F7BA5D"
+    ui_color = "#D4E2D4"
     _VERB = "seed"
 
 
 class RunOperator(_DBTModelOperator):
-    ui_color = "#163433"
+    ui_color = "#FCF8E8"
     _VERB = "run"
