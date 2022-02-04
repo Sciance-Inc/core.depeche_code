@@ -164,6 +164,7 @@ class _DBTModelOperator(_DBTOperator):
 
 
 class DebugOperator(_DBTModelLessOperator):
+    ui_color = "#046B67"
     _VERB = "debug"
 
 
