@@ -30,7 +30,7 @@ from depechecode.logger import get_module_logger
 _LOGGER = get_module_logger()
 
 
-def execute_in_subprocess(cmd: List[str], cwd=None, env=None):
+def _execute_in_subprocess(cmd: List[str], cwd=None, env=None):
     """
     Execute a process and stream output to logger
 
@@ -122,7 +122,7 @@ def _prepare_virtualenv(
     virtualenv_cmd = _generate_virtualenv_cmd(
         venv_directory, python_bin, system_site_packages
     )
-    execute_in_subprocess(virtualenv_cmd)
+    _execute_in_subprocess(virtualenv_cmd)
 
     pip_cmd = None
     if requirements_file_path:
@@ -131,7 +131,7 @@ def _prepare_virtualenv(
         )
 
     if pip_cmd:
-        execute_in_subprocess(pip_cmd)
+        _execute_in_subprocess(pip_cmd)
 
     _LOGGER.info(f"Successfully created the Virtual environement to '{venv_directory}'")
 

@@ -11,6 +11,10 @@
     The Operator wraps a CLI call to DBT
 
     This is mainly (only) done to run DBT without having to relays on the unstable Python API : https://docs.getdbt.com/docs/running-a-dbt-project/dbt-api
+    
+    The Class relays on the VenvBashOperator that internally uses BashOperator.
+    The _DBTOperators replaces the CWD with the working_dir if provided.
+
 """
 
 #############################################################################
@@ -65,6 +69,7 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
         self,
         dbt_command_args: List[str],
         requirements_file_path: str = None,
+        working_dir: str = None,
         python_bin: str = None,
         profiles_dir: str = None,
         target: str = None,
@@ -92,6 +97,7 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
         super(_DBTOperator, self).__init__(
             *args,
             bash_command=cmd,
+            cwd=working_dir,
             requirements_file_path=requirements_file_path,
             python_bin=python_bin,
             **kwargs,
@@ -102,7 +108,15 @@ class _DBTModelLessOperator(_DBTOperator):
     _VERB: str
 
     @apply_defaults
-    def __init__(self, profiles_dir: str = None, target: str = None, *args, **kwargs):
+    def __init__(
+        self,
+        profiles_dir: str = None,
+        target: str = None,
+        working_dir: str = None,
+        requirements_file_path: str = None,
+        *args,
+        **kwargs,
+    ):
         """
         Return a new operator executing a call to DBT using the _VERB attribute.
         The command schould'nt be model dependant.
@@ -111,6 +125,8 @@ class _DBTModelLessOperator(_DBTOperator):
         super(_DBTModelLessOperator, self).__init__(
             dbt_command_args=["dbt", self._VERB],
             profiles_dir=profiles_dir,
+            working_dir=working_dir,
+            requirements_file_path=requirements_file_path,
             target=target,
             *args,
             **kwargs,
@@ -122,7 +138,14 @@ class _DBTModelOperator(_DBTOperator):
 
     @apply_defaults
     def __init__(
-        self, model: str, profiles_dir: str = None, target: str = None, *args, **kwargs
+        self,
+        model: str,
+        profiles_dir: str = None,
+        target: str = None,
+        working_dir: str = None,
+        requirements_file_path: str = None,
+        *args,
+        **kwargs,
     ):
         """
         Return a new operator executing a call to DBT using the _VERB attribute.
@@ -132,6 +155,8 @@ class _DBTModelOperator(_DBTOperator):
         super(_DBTModelOperator, self).__init__(
             dbt_command_args=["dbt", self._VERB, "--models", model],
             profiles_dir=profiles_dir,
+            working_dir=working_dir,
+            requirements_file_path=requirements_file_path,
             target=target,
             *args,
             **kwargs,

@@ -21,7 +21,6 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.decorators import apply_defaults
 
 from depechecode.airflow_plugin.operators.dbt import RunOperator
-from depechecode.dag_builder.compile import _Compile
 from depechecode.logger import MixinLogable
 
 #############################################################################
@@ -51,7 +50,7 @@ class DBTAutoDag(MixinLogable):
     def __init__(
         self,
         dag,
-        working_dir: str,
+        working_dir: str = None,
         profiles_dir: str = None,
         target: str = None,
         requirements_file_path: str = None,
@@ -79,9 +78,9 @@ class DBTAutoDag(MixinLogable):
         Returns: A JSON object containing the dbt manifest content.
         """
 
-        # with self._compile:
+        cwd = self._working_dir or "/"
         try:
-            path = Path(self._working_dir) / Path(self._PATH_TO_TARGET)
+            path = Path(cwd) / Path(self._PATH_TO_TARGET)
             with open(path) as f:
                 file_content = json.load(f)
         except BaseException as error:
@@ -110,7 +109,7 @@ class DBTAutoDag(MixinLogable):
                         task_group=self._run_group,
                         task_id=node_name,
                         model=node_name.split(".")[-1],
-                        cwd=self._working_dir,
+                        working_dir=self._working_dir,
                         requirements_file=self._requirements_file_path,
                         profiles_dir=self._profiles_dir,
                         target=self._target,
