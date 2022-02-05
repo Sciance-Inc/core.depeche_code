@@ -83,6 +83,6 @@ class AzureDBTDeploymentOperator(BaseOperator):
         get_repos_response = git_client.get_repositories(self._project_name)
 
         for repo in get_repos_response:
-            _LOGGER.debug(f"Gazing into {repo.name}, scrutinizingly.")
+            _LOGGER.debug(f"\U0001F440 : gazing into {repo.name}, scrutinizingly.")
             for deployment in get_deployment_config(repo, git_client):
                 apply_dbt_deployment(deployment)

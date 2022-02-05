@@ -135,8 +135,8 @@ def apply_dbt_deployment(deployment: _Deployment):
 
         # Move the whole folder at once :
         dst = _DAGBAG / Path(deployment.repo_name) / Path(deployment.branch_name)
-        shutil.copytree(str(artifact), str(dst))
+        shutil.copy(str(artifact), str(dst))
 
         _LOGGER.info(
-            f"\U0001F389 : ... '{deployment.dag_id}' has been automagically deployed."
+            f"\U00002728 \U0001F370 \U00002728 : ... '{deployment.dag_id}' has been automagically deployed."
         )
