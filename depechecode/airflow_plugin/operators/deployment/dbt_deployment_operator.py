@@ -29,7 +29,7 @@ from depechecode.airflow_plugin.operators.deployment.serendipity.azure_interacto
 #                                  Script                                   #
 #############################################################################
 
-_LOGGER = get_module_logger("DBTOperator")
+_LOGGER = get_module_logger("DBTDeploymentOperator")
 
 
 class AzureDBTDeploymentOperator(BaseOperator):
