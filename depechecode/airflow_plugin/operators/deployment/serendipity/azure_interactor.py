@@ -15,7 +15,11 @@ from depechecode.virtual_env import TempVenv, execute_in_subprocess
 from depechecode.logger import get_module_logger
 
 _LOGGER = get_module_logger()
-_DAGBAG = Path(os.environ.get("AIRFLOW_HOME", "/opt/airflow")) / "dags"
+_DAGBAG = (
+    Path(os.environ.get("AIRFLOW_HOME", "/opt/airflow"))
+    / "dags/depechecode_deployments/"
+)
+_DAGBAG.mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
