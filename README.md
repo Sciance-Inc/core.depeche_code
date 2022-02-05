@@ -12,7 +12,7 @@ _They can only do harm_
 
 
 # Objectives
-__DepecheCode__ aims at making DBT dags deployable on Airflow. The library provides a DBT's dag parser and some dedicated operators to run DBT over Jumboxes.
+__DepecheCode__ aims at making DBT dags deployable on Airflow. The library provides a DBT's dag parser and some dedicated operators to run DBT. T
 
 # Build
 > Airflow requires a setupable packages that can be extract from poetry

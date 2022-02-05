@@ -14,11 +14,12 @@
 #                                 Packages                                  #
 #############################################################################
 
+import os
 import sys
 import shlex
 import subprocess
 from tempfile import TemporaryDirectory
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pathlib import Path
 
 from depechecode.logger import get_module_logger
@@ -30,7 +31,7 @@ from depechecode.logger import get_module_logger
 _LOGGER = get_module_logger()
 
 
-def _execute_in_subprocess(cmd: List[str], cwd=None, env=None):
+def execute_in_subprocess(cmd: List[str], cwd=None, env=None):
     """
     Execute a process and stream output to logger
 
@@ -59,9 +60,7 @@ def _execute_in_subprocess(cmd: List[str], cwd=None, env=None):
 
         exit_code = proc.wait()
     if exit_code != 0:
-        raise ValueError(
-            "\n".join(logs)
-        )  # subprocess.CalledProcessError(exit_code, cmd, output="\n".join(logs))
+        raise ValueError("\n".join(logs))
 
 
 def _generate_virtualenv_cmd(tmp_dir, python_bin, system_site_packages):
@@ -122,7 +121,7 @@ def _prepare_virtualenv(
     virtualenv_cmd = _generate_virtualenv_cmd(
         venv_directory, python_bin, system_site_packages
     )
-    _execute_in_subprocess(virtualenv_cmd)
+    execute_in_subprocess(virtualenv_cmd)
 
     pip_cmd = None
     if requirements_file_path:
@@ -131,7 +130,7 @@ def _prepare_virtualenv(
         )
 
     if pip_cmd:
-        _execute_in_subprocess(pip_cmd)
+        execute_in_subprocess(pip_cmd)
 
     _LOGGER.info(f"Successfully created the Virtual environement to '{venv_directory}'")
 
@@ -151,6 +150,7 @@ class TempVenv(TemporaryDirectory):
         suffix: str = None,
         prefix: str = "airflow_venv",
         dir=None,
+        cwd: str = None,
     ):
         """
         Create the context manager.
@@ -161,6 +161,7 @@ class TempVenv(TemporaryDirectory):
             suffix (str, optional): Same as tempfile.TemporaryDirectory. Defaults to None.
             prefix (str, optional): Same as tempfile.TemporaryDirectory. Defaults to "airflow_venv".
             dir ([type], optional): Same as tempfile.TemporaryDirectory. Defaults to None.
+            cwd: str: The directory to execute the command from.
         """
 
         super().__init__(
@@ -169,8 +170,23 @@ class TempVenv(TemporaryDirectory):
             dir=dir,
         )  # type: ignore
 
+        if cwd and requirements_file_path:
+            requirements_file_path = str(Path(cwd) / Path(requirements_file_path))
+
         self._requirements_file_path = requirements_file_path
         self._python_bin = python_bin
+
+    @property
+    def get_prepended_env(self) -> Dict:
+        """
+        Return a dictionary of environements fork from os.environ with the current python setted in the Paht
+        """
+
+        env = os.environ.copy()
+        virtual_env_path = self.bin_path
+        env["PATH"] = virtual_env_path + os.pathsep + env["PATH"]
+
+        return env
 
     @property
     def bin_path(self) -> str:
@@ -194,4 +210,4 @@ class TempVenv(TemporaryDirectory):
             requirements_file_path=self._requirements_file_path,
         )
 
-        return None
+        return self
