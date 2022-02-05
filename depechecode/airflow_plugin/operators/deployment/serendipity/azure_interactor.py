@@ -134,8 +134,10 @@ def apply_dbt_deployment(deployment: _Deployment):
             return
 
         # Move the whole folder at once :
+        # TODO : add support for other python bin, migrates to 3.8 and uses copy tree
         dst = _DAGBAG / Path(deployment.repo_name) / Path(deployment.branch_name)
-        shutil.copy(str(artifact), str(dst))
+        shutil.rmtree(dst, ignore_errors=True)
+        shutil.copytree(str(artifact), str(dst))
 
         _LOGGER.info(
             f"\U00002728 \U0001F370 \U00002728 : ... '{deployment.dag_id}' has been automagically deployed."
