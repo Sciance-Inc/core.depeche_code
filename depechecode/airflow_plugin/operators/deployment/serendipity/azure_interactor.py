@@ -135,25 +135,8 @@ def apply_dbt_deployment(deployment: _Deployment):
 
         # Move the whole folder at once :
         dst = _DAGBAG / Path(deployment.repo_name) / Path(deployment.branch_name)
-        shutil.move(str(artifact), str(dst))
+        shutil.copytree(str(artifact), str(dst))
 
         _LOGGER.info(
             f"\U0001F389 : ... '{deployment.dag_id}' has been automagically deployed."
         )
-
-
-if __name__ == "__main__":
-    from azure.devops.connection import Connection
-    from msrest.authentication import BasicAuthentication
-
-    credentials = BasicAuthentication("", "xab75ubrov6uv2l6gcrpbdmdp3elneaami6jfsmknjs4y4doxo2a")  # type: ignore
-    connection = Connection(
-        base_url="https://dev.azure.com/Centre-Expertise-IA", creds=credentials
-    )
-    git_client = connection.clients.get_git_client()
-    get_repos_response = git_client.get_repositories("COTRA-CE")
-
-    for repo in get_repos_response:
-        _LOGGER.debug(f"Gazing into {repo.name}, scrutinizingly.")
-        for deployment in get_deployment_config(repo, git_client):
-            apply_dbt_deployment(deployment)
