@@ -15,6 +15,7 @@
 #############################################################################
 
 from airflow.utils.decorators import apply_defaults
+from airflow.models.baseoperator import BaseOperator
 from depechecode.logger import get_module_logger
 from azure.devops.connection import Connection
 from msrest.authentication import BasicAuthentication
@@ -31,7 +32,7 @@ from depechecode.airflow_plugin.operators.deployment.serendipity.azure_interacto
 _LOGGER = get_module_logger("DBTOperator")
 
 
-class AzureDBTDeploymentOperator:
+class AzureDBTDeploymentOperator(BaseOperator):
     """
     Fetch repo from Azure and apply DBT operators.
     """
@@ -56,7 +57,6 @@ class AzureDBTDeploymentOperator:
             project_name: (str, optional): The project's name friendly name.
         """
 
-        # TODO :  https://airflow.apache.org/docs/apache-airflow/stable/howto/variable.html SECRET ARE NOT DISPLAYED
         super(AzureDBTDeploymentOperator, self).__init__(
             *args,
             **kwargs,
