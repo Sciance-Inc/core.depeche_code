@@ -40,7 +40,7 @@ class AzureDBTDeploymentOperator(BaseOperator):
     @apply_defaults
     def __init__(
         self,
-        git_PAT: str = None,
+        ado_PAT: str = None,
         dag_bag_path: str = None,
         organization_url: str = None,
         project_name: str = None,
@@ -62,7 +62,7 @@ class AzureDBTDeploymentOperator(BaseOperator):
             **kwargs,
         )
 
-        self._git_PAT = git_PAT
+        self._ado_PAT = ado_PAT
         self._dag_bag_path = dag_bag_path
         self._organization_url = organization_url
         self._project_name = project_name
@@ -77,7 +77,7 @@ class AzureDBTDeploymentOperator(BaseOperator):
         # organization_url = "https://dev.azure.com/Centre-Expertise-IA"
 
         # Create the git client to use
-        credentials = BasicAuthentication("", self._git_PAT)  # type: ignore
+        credentials = BasicAuthentication("", self._ado_PAT)  # type: ignore
         connection = Connection(base_url=self._organization_url, creds=credentials)
         git_client = connection.clients.get_git_client()
         get_repos_response = git_client.get_repositories(self._project_name)
