@@ -129,7 +129,7 @@ def apply_dbt_deployment(deployment: _Deployment):
         )
         if runs > 0:
             _LOGGER.info(
-                f"\U0001F525 : ...abording the deployment of '{deployment.dag_id}' has the DAG is already running (looking at you side-effect !)."
+                f"\U0001F525 : ...abording the deployment of '{deployment.dag_id}' as the DAG is already running (looking at you DBT-side-effect !)."
             )
             return
 
