@@ -2,7 +2,7 @@
 *.ignoreMe.*
 fakerepo/Data/*
 db-cache/*
-
+wip/
 ### IDE ###
 *.vscode/
 .idea

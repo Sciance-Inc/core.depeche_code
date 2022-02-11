@@ -1,1 +1,1 @@
-from .dbt_deployment_operator import AzureDBTDeploymentOperator
+from .s3_deployment_operator import S3DBTDeploymentOperator
