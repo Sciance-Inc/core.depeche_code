@@ -189,7 +189,7 @@ class DepsOperator(_DBTModelLessOperator):
 
 class SeedOperator(_DBTModelLessOperator):
     ui_color = "#D4E2D4"
-    _VERB = "seed"
+    _VERB = "seed --full-refresh"
 
 
 class RunOperator(_DBTModelOperator):
