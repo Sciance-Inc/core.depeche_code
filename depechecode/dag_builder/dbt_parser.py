@@ -44,7 +44,7 @@ class DBTAutoDag(MixinLogable):
         dbt_test_group_name: Optional override for the task group name.
     """
 
-    _PATH_TO_TARGET = "target/manifest.json"
+    _PATH_TO_TARGET = "depechecode/manifest.json"
 
     @apply_defaults
     def __init__(
