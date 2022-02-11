@@ -50,6 +50,11 @@ class S3DBTDeploymentOperator(BaseOperator):
         **kwargs,
     ) -> None:
 
+        super(S3DBTDeploymentOperator, self).__init__(
+            *args,
+            **kwargs,
+        )
+
         self._deployments_connection_id = deployments_connection_id
         self._deployments_bucket = deployments_bucket
 
