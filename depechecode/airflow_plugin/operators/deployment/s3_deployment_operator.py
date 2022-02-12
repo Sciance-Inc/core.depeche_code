@@ -34,6 +34,7 @@ from depechecode.logger import get_module_logger
 _LOGGER = get_module_logger("DBTDeploymentOperator")
 _DAGBAG = Path(os.environ.get("AIRFLOW_HOME", "/opt/airflow")) / "dags/depechecode/"
 _DAGBAG.mkdir(parents=True, exist_ok=True)
+_DAGBAG = str(_DAGBAG)
 
 
 class S3DBTDeploymentOperator(BaseOperator):
@@ -44,6 +45,7 @@ class S3DBTDeploymentOperator(BaseOperator):
     @apply_defaults
     def __init__(
         self,
+        dag_bag: str = _DAGBAG,
         deployments_connection_id: str = "minio_svc",
         deployments_bucket: str = "deployments",
         *args,
@@ -55,6 +57,7 @@ class S3DBTDeploymentOperator(BaseOperator):
             **kwargs,
         )
 
+        self._dag_bag = Path(dag_bag)
         self._deployments_connection_id = deployments_connection_id
         self._deployments_bucket = deployments_bucket
 
@@ -103,8 +106,9 @@ class S3DBTDeploymentOperator(BaseOperator):
 
                     # Move the whole folder at once :
                     # TODO : add support for other python bin, migrates to 3.8 and uses copy tree
-                    dst = _DAGBAG / Path(deployment_name)
+                    dst = self._dag_bag / Path(deployment_name)
                     rmtree(dst, ignore_errors=True)
+                    _LOGGER.info(f"Moving deployment to : {str(dst)}")
                     copytree(to_, str(dst))
 
                     _LOGGER.info(
