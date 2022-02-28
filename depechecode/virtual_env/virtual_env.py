@@ -204,7 +204,7 @@ class TempVenv(TemporaryDirectory):
         Create and configure the virtual env.
         """
 
-        super().__init__()
+        super().__enter__()
 
         _prepare_virtualenv(
             venv_directory=self.name,
