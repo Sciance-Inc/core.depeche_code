@@ -63,14 +63,17 @@ class VenvBashOperator(BashOperator):
         if cwd and requirements_file_path:
             requirements_file_path = str(Path(cwd) / Path(requirements_file_path))
 
-        self._manager = TempVenv(
+        self._manager_factory = lambda: TempVenv(
             requirements_file_path=requirements_file_path, python_bin=python_bin
         )
+
+        self._bin_path = None
 
     def get_env(self, context):
         """
         Builds the set of environment variables to be exposed for the bash command.
-        Intercept the definition of the path and insert the path to the Venv
+        Intercept the definition of the path and insert the path to the Venv.
+        Called by the parent, in the execute mmethod
         """
 
         # Fetch all the environement to be sure to get the path and override it with the environment given at the Operator instanciation if any
@@ -78,7 +81,9 @@ class VenvBashOperator(BashOperator):
         env = {**os.environ.copy(), **override}
 
         # Add the newyly created virtual python to the path
-        virtual_env_path = self._manager.bin_path
+        virtual_env_path = self._bin_path
+        if virtual_env_path is None:
+            raise ValueError("bin path is only available for an active manager.")
         env["PATH"] = virtual_env_path + os.pathsep + env["PATH"]
 
         # Add the contextual variables from Airflow
@@ -96,5 +101,6 @@ class VenvBashOperator(BashOperator):
         """
 
         # Create the virtual enviroment before executing the Task.
-        with self._manager:
+        with self._manager_factory() as mng:
+            self._bin_path = mng.bin_path
             super().execute(context)
