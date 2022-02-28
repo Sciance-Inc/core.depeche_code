@@ -204,6 +204,8 @@ class TempVenv(TemporaryDirectory):
         Create and configure the virtual env.
         """
 
+        super().__init__()
+
         _prepare_virtualenv(
             venv_directory=self.name,
             python_bin=self._python_bin,
