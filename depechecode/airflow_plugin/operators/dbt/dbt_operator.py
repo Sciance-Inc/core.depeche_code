@@ -73,6 +73,8 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
         python_bin: str = None,
         profiles_dir: str = None,
         target: str = None,
+        env: dict = None,
+        append_env: bool = False,
         *args,
         **kwargs,
     ) -> None:
@@ -100,6 +102,8 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
             cwd=working_dir,
             requirements_file_path=requirements_file_path,
             python_bin=python_bin,
+            env=env,
+            append_env=append_env,
             **kwargs,
         )
 
@@ -114,6 +118,8 @@ class _DBTModelLessOperator(_DBTOperator):
         target: str = None,
         working_dir: str = None,
         requirements_file_path: str = None,
+        env: dict = None,
+        append_env: bool = False,
         *args,
         **kwargs,
     ):
@@ -128,6 +134,8 @@ class _DBTModelLessOperator(_DBTOperator):
             working_dir=working_dir,
             requirements_file_path=requirements_file_path,
             target=target,
+            env=env,
+            append_env=append_env,
             *args,
             **kwargs,
         )
@@ -145,6 +153,8 @@ class _DBTModelOperator(_DBTOperator):
         target: str = None,
         working_dir: str = None,
         requirements_file_path: str = None,
+        env: dict = None,
+        append_env: bool = False,
         *args,
         **kwargs,
     ):
@@ -159,6 +169,8 @@ class _DBTModelOperator(_DBTOperator):
             working_dir=working_dir,
             requirements_file_path=requirements_file_path,
             target=target,
+            env=env,
+            append_env=append_env,
             *args,
             **kwargs,
         )
