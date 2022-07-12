@@ -23,7 +23,8 @@
 
 from abc import ABCMeta
 from typing import List
-from airflow.utils.decorators import apply_defaults
+
+# from airflow.utils.decorators import apply_defaults
 from depechecode.airflow_plugin.operators.bash import VenvBashOperator
 from depechecode.logger import get_module_logger
 
@@ -64,7 +65,7 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
 
         return " ".join(args_)
 
-    @apply_defaults
+    # @apply_defaults
     def __init__(
         self,
         dbt_command_args: List[str],
@@ -111,7 +112,7 @@ class _DBTOperator(VenvBashOperator, metaclass=ABCMeta):
 class _DBTModelLessOperator(_DBTOperator):
     _VERB: str
 
-    @apply_defaults
+    # @apply_defaults
     def __init__(
         self,
         profiles_dir: str = None,
@@ -145,7 +146,7 @@ class _DBTModelOperator(_DBTOperator):
     _VERB: str
     # ui_fgcolor = "#000000"
 
-    @apply_defaults
+    #    @apply_defaults
     def __init__(
         self,
         model: str,
