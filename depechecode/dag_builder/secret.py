@@ -11,6 +11,6 @@ def fetch_secret(secret_name: str, vault_name: str = "maas"):
     client = new_client_from_environment()
     vault_ids = [vault.id for vault in client.get_vaults() if vault.name == vault_name]
     secret = client.get_item_by_title(secret_name, vault_ids[0]).fields
-    secret = {item.id: item for item in secret}
+    secret = {item.label: item for item in secret}
 
     return secret
