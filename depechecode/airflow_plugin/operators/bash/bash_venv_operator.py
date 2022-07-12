@@ -44,6 +44,8 @@ class VenvBashOperator(BashOperator):
         requirements_file_path: str = None,
         python_bin: str = None,
         cwd: str = None,
+        env: dict = None,
+        append_env: bool = False,
         *args,
         **kwargs,
     ) -> None:
@@ -57,7 +59,11 @@ class VenvBashOperator(BashOperator):
         """
 
         super(VenvBashOperator, self).__init__(
-            bash_command=bash_command, cwd=cwd, task_id=task_id, *args, **kwargs
+            bash_command=bash_command,
+            cwd=cwd,
+            task_id=task_id,
+            env=env,
+            append_env=append_env,
         )
 
         if cwd and requirements_file_path:
