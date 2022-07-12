@@ -57,7 +57,7 @@ class VenvBashOperator(BashOperator):
         """
 
         super(VenvBashOperator, self).__init__(
-            bash_command=bash_command, cwd=cwd, task_id=task_id
+            bash_command=bash_command, cwd=cwd, task_id=task_id, *args, **kwargs
         )
 
         if cwd and requirements_file_path:
