@@ -18,6 +18,7 @@ install_requires = [
     "pyodbc>=4.0.32,<5.0.0",
     "sshtunnel>=0.4.0,<0.5.0",
     "virtualenv>=20.13.0,<21.0.0",
+    "onepasswordconnectsdk>=1.2.0",
 ]
 
 entry_points = {
