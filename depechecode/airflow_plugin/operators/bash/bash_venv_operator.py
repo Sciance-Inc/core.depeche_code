@@ -36,7 +36,7 @@ class VenvBashOperator(BashOperator):
     The operator insert the virtual environement"s path into the Path variables.
     """
 
-    # @apply_defaults
+    @apply_defaults
     def __init__(
         self,
         task_id: str,
