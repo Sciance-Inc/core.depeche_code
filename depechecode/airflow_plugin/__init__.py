@@ -27,7 +27,7 @@ from depechecode.airflow_plugin.operators.dbt import (
     TestOperator,
 )
 
-from depechecode.airflow_plugin.operators.deployment import S3DBTDeploymentOperator
+from depechecode.airflow_plugin.operators.deployment import S3DeploymentOperator
 
 #############################################################################
 #                                  Script                                   #
@@ -48,5 +48,5 @@ class DepecheCodePlugin(AirflowPlugin):
         SeedOperator,
         RunOperator,
         TestOperator,
-        S3DBTDeploymentOperator,
+        S3DeploymentOperator,
     ]

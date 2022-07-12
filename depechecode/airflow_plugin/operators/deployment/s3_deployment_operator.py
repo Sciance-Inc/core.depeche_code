@@ -37,7 +37,7 @@ _DAGBAG.mkdir(parents=True, exist_ok=True)
 _DAGBAG = str(_DAGBAG)
 
 
-class S3DBTDeploymentOperator(BaseOperator):
+class S3DeploymentOperator(BaseOperator):
     """
     Fetch artifacts from s3, packaged with DepecheCode and deploy them..
     """
@@ -52,7 +52,7 @@ class S3DBTDeploymentOperator(BaseOperator):
         **kwargs,
     ) -> None:
 
-        super(S3DBTDeploymentOperator, self).__init__(
+        super(S3DeploymentOperator, self).__init__(
             *args,
             **kwargs,
         )

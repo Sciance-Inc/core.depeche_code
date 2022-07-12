@@ -1,1 +1,1 @@
-from .s3_deployment_operator import S3DBTDeploymentOperator
+from .s3_deployment_operator import S3DeploymentOperator
